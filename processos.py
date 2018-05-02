@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from time import sleep
-
 class Processo(object):
     __estados = {0: 'Pronto',
                  1: 'Executando',
@@ -110,8 +108,3 @@ class Processo(object):
         elif self.tempo_de_saida:
             self.__tempo_de_espera += (tempo_de_entrada - self.tempo_de_saida)
         self.__tempo_de_entrada.append(tempo_de_entrada)
-
-        # print('self.tempo_de_saida: {}'.format(self.tempo_de_saida))
-        # print('self.__tempo_de_espera: {}'.format(self.__tempo_de_espera))
-        # print('tempo_de_entrada: {}'.format(tempo_de_entrada))
-        # sleep(5)
