@@ -16,7 +16,7 @@ class Escalonador(ABC):
     """
     # Por propositos didáticos, para poder obervar o que está ocorrendo no
     # simulador cada 1ms do tempo de execução do processo durará 500ms
-    __delay = 0.5
+    __delay = 0.2
     __timeline = 0
     processo_executando = 0
     timeline_linhas = []
@@ -35,13 +35,16 @@ class Escalonador(ABC):
         ``id tempo_de_execucao prioridade tempo_de_chegada eventos_I_O``
         """
         aux = []
-        with open(file, "r") as processos:
-            for line in processos:
-                atributos = line.split()
-                aux.append(Processo(0, int(atributos[0]), int(atributos[1]),
-                                    int(atributos[2]), int(atributos[3]),
-                                    list(map(int, atributos[4:]))))
-        return aux
+        try:
+            with open(file, "r") as processos:
+                for line in processos:
+                    atributos = line.split()
+                    aux.append(Processo(0, int(atributos[0]), int(atributos[1]),
+                                        int(atributos[2]), int(atributos[3]),
+                                        list(map(int, atributos[4:]))))
+            return aux
+        except IOError:
+            raise IOError('Erro: Falha ao abrir arquivo, certifique-se de que {} exista.'.format(file))
 
     def atraso_ms(self):
         sleep(self.__delay)
