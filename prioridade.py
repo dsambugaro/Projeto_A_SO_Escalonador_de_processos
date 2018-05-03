@@ -68,32 +68,14 @@ class Prioridade(Escalonador):
             processo.tempo_de_saida = self.timeline
             self.atraso_ms()
 
-    def simular_I_O(self):
-        for i in range(len(self.processando)):
-            if self.processando[i].estado == 'Bloqueado para I/O':
-                self.processando[i].estado = 0
-                break
-
-    def simular_escalonamento(self):
-        self.verificar_entrada_de_processos()
-        while self.quantidade_estado('Concluído') < len(self.processar):
-            processo = self.escalonar()
-            if processo != None:
-                self.executar(processo)
-            else:
-                self.timeline += 1
-                self.verificar_entrada_de_processos()
-                self.mostrar_timeline()
-        self.mostrar_timeline()
-
     def montar_linhas(self):
         linha = '{:02d}\t'.format(self.timeline)
         for i in range(len(self.processando)):
             if self.processando[i].estado:
                 if self.processando[i].tipo == 'user':
-                    aux = 'P_{0.id} / {0.tempo_total:02d}ms / {0.tempo_restante:02d}ms'.format(self.processando[i])
+                    aux = 'P_{0.id} / {0.prioridade} / {0.tempo_total:02d}ms / {0.tempo_restante:02d}ms'.format(self.processando[i])
                 else:
-                    aux = 'P_{0.id} / Tratamento de I/O'.format(self.processando[i])
+                    aux = 'P_{0.id} / {0.prioridade} / Tratamento de I/O'.format(self.processando[i])
                 if self.processando[i].estado == 'Pronto':
                     aux = colored(aux, 'cyan', None, ['bold'])
                 elif self.processando[i].estado == 'Executando':

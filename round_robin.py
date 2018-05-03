@@ -63,24 +63,6 @@ class Round_Robin(Escalonador):
         if processo.estado == 'Executando':
             processo.estado = 0
 
-    def simular_I_O(self):
-        for i in range(len(self.processando)):
-            if self.processando[i].estado == 'Bloqueado para I/O':
-                self.processando[i].estado = 0
-                break
-
-    def simular_escalonamento(self):
-        self.verificar_entrada_de_processos()
-        while self.quantidade_estado('Concluído') < len(self.processar):
-            processo = self.escalonar()
-            if processo != None:
-                self.executar(processo)
-            else:
-                self.timeline += 1
-                self.verificar_entrada_de_processos()
-                self.mostrar_timeline()
-        self.mostrar_timeline()
-
     def montar_linhas(self):
         linha = '{:02d}\t'.format(self.timeline)
         for i in range(len(self.processando)):

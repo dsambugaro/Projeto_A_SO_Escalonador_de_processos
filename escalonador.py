@@ -10,12 +10,11 @@ from termcolor import colored
 class Escalonador(ABC):
     """
     Classe abstrata para criar simulações de algoritmos de escalonamento.
-    Instancia uma lista de processos baseado no arquivo ``file`` que deve ser
-    passado
-    Necessário implementar
+    Instancia uma lista de processos baseado no arquivo ``file`` passado
+    por parametro.
     """
-    # Por propositos didáticos, para poder obervar o que está ocorrendo no
-    # simulador cada 1ms do tempo de execução do processo durará 500ms
+    # Por propósitos didáticos, para poder observar o que está ocorrendo no
+    # simulador cada 1ms do tempo de execução do processo durará 200ms
     __delay = 0.2
     __timeline = 0
     processo_executando = 0
@@ -73,16 +72,6 @@ class Escalonador(ABC):
         raise NotImplementedError("Você não pode instanciar essa classe " +
                                   "abstrata. Implemente-a, por favor")
 
-    @abstractmethod
-    def simular_I_O(self):
-        raise NotImplementedError("Você não pode instanciar essa classe " +
-                                  "abstrata. Implemente-a, por favor")
-
-    @abstractmethod
-    def simular_escalonamento(self):
-        raise NotImplementedError("Você não pode instanciar essa classe " +
-                                  "abstrata. Implemente-a, por favor")
-
     def mostrar_timeline(self):
         self.montar_linhas()
         executando = colored('Executando:', 'yellow', None, ['underline', 'bold'])
@@ -114,6 +103,24 @@ class Escalonador(ABC):
                 if self.processar[i].tempo_chegada == self.timeline:
                     self.processar[i].estado = 0
                     self.processando.append(self.processar[i])
+
+    def simular_I_O(self):
+        for i in range(len(self.processando)):
+            if self.processando[i].estado == 'Bloqueado para I/O':
+                self.processando[i].estado = 0
+                break
+
+    def simular_escalonamento(self):
+        self.verificar_entrada_de_processos()
+        while self.quantidade_estado('Concluído') < len(self.processar):
+            processo = self.escalonar()
+            if processo != None:
+                self.executar(processo)
+            else:
+                self.timeline += 1
+                self.verificar_entrada_de_processos()
+                self.mostrar_timeline()
+        self.mostrar_timeline()
 
     def tempo_de_espera_total(self):
         tempo_de_espera_total = 0
